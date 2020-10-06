@@ -11,35 +11,33 @@ class Home extends CI_Controller {
 
 	public function index(){
 
-		$item = $this->home_model->get()->result();
+		$stasiun = $this->home_model->get()->result();
 		$data = [
 			'title' 	=> 'Halaman Dashboard',
-			'item' 		=> $item,
+			'stasiun' 	=> $stasiun,
 		];
 		$this->load->view('admin/home', $data, FALSE);
 	}
 
-	public function add(){
+	public function add_stasiun(){
 		$post = $this->input->post(null, true);
-		if(isset($_POST['submit'])){
-			if($this->home_model->check_nama_item($post['nama_item'], $post['id'])->num_rows() > 0 ){
-					$this->session->set_flashdata('warning', "nama item $post[nama_item] sudah digunakan!");
-					redirect(site_url('admin/home'),'refresh');
-			}
-			else{
-				$this->home_model->add($post);
-				if($this->db->affected_rows() > 0 ){
-					$this->session->flashdata('sukses','Data Berhasil Di Tambah');
-				}
-					echo "<script>window.location='".site_url('admin/home')."'</script>";
-			}
+		$this->home_model->add_stasiun($post);
+		if($this->db->affected_rows() > 0 ){
+			$this->session->flashdata('sukses','Data Berhasil Di Tambah');
 		}
+			echo "<script>window.location='".site_url('admin/home')."'</script>";
+	}
+
+	public function delete_stasiun($id){
+		$delete = $this->home_model->delete_stasiun($id);
+		$this->session->flashdata('sukses', 'Data Berhasil Di Hapus');
+		redirect(site_url('admin/home'),'refresh');
 	}
 
 	public function update($id){
-		$item = $this->home_model->get($id)->result();
+		$stasiun = $this->home_model->get($id)->result();
 		$data = [
-			'item' 		=> $item,
+			'stasiun' 		=> $stasiun,
 		];
 		$this->load->view('admin/update', $data, FALSE);
 	}
@@ -58,12 +56,6 @@ class Home extends CI_Controller {
 				redirect(site_url('admin/home'),'refresh');
 			}
 		}
-	}
-
-	public function delete($id){
-		$delete = $this->home_model->delete($id);
-		$this->session->flashdata('sukses', 'Data Berhasil Di Hapus');
-		redirect(site_url('admin/home'),'refresh');
 	}
 
 }

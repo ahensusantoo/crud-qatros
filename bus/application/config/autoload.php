@@ -62,6 +62,7 @@ $autoload['libraries'] = array(
 								'database',
 								'session',
 								'form_validation',
+								'user_login'
 							);
 
 /*
